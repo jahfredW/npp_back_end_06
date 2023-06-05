@@ -1,0 +1,6 @@
+App\Entity\User:
+  user1:
+      email: 'fred.gruwe@gmail.com'
+      pseudo: <userName()>
+      roles: ["ROLE_ADMIN"]
+      password: '0000'

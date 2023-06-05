@@ -1,0 +1,46 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello InvoiceController!{% endblock %}
+
+{% block body %}
+
+{# {% apply inline_css %}
+<style>
+    h2 {
+        color: yellow;
+    }
+    
+</style> #}
+
+<h2>Veuillez trouver ci-dessous les liens de téléchargement pour vos photos</h2>
+<br />
+<p>Pour télécharger vos photos cliquez sur les liens, puis cliquez droit et ' enregistrer l'image sous' </p>
+<br />
+{% for key,value in fileNameList %}
+<p><a href="{{ value }}" download,>{{ key }}</a></p>
+<br />
+{% endfor %}
+<br/>
+<p>Notez que vos liens sont disponibles une semaine</p>
+<hr>
+<h1>Votre facture</h1>
+<table>
+  <tr>
+    <th>Produit</th>
+    <th>Quantité</th>
+    <th>Prix</th>
+  </tr>
+    {% for i in 0..orderLines|length-1 %}
+    <tr>
+        <td>Photo</td>
+        <td>{{ orderLines[i]['quantity'] }}</td>
+        <td>{{ orderLines[i]['price'] }}</td>
+    </tr>
+{% endfor %}
+</table>
+
+
+{# {% endapply %} #}
+{% endblock %}
+
