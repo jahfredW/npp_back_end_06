@@ -14,7 +14,7 @@ class GoogleCloudStorage {
     private $objectName;
     private $object;
 
-    public function __construct($bucketName) {
+    private function __construct($bucketName) {
 
         $this->bucketName = $bucketName;
         $this->objectName = "";

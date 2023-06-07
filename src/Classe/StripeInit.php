@@ -50,13 +50,13 @@ class StripeInit{
      *
      * initalisation d'une transaction
      *
-     * @param type $cartData : panier 
+     * @param type $cartArray : panier 
      * @param type $orderId : numéro de commande
      * @param type $request Request
      * @return type $checkout session Session stripe en cours 
      */
 
-    public function startPayment($cartData, $orderId, Request $request, $userId, $totalQuantity, $urlList, $currentDiscountRate = null){
+    public function startPayment($cartArray, $orderId, Request $request, $userId, $totalQuantity, $urlList, $currentDiscountRate = null){
 
         // initialisation d'une réduction = array vide
         $discounts = [];
@@ -84,15 +84,15 @@ class StripeInit{
         $checkout_session = Session::create([
             'line_items' => [
                     array_map( fn(array $product) => [
-                        'quantity' => $product['quantity'],
+                        'quantity' => $product['picture_quantity'],
                         // 'price' => $product['price'] * 100
                         'price_data' => [
                             'currency' => 'EUR', 
                             'product_data' => [
                                 'name' => 'photo'
                             ],
-                            'unit_amount' => $product['price'] * 100,          
-            ]], $cartData )
+                            'unit_amount' => $product['picture_price'] * 100,          
+            ]], $cartArray )
                 ],
             'mode' => 'payment',
             'success_url' => "http://localhost:5173/success/" .  $orderId ,
