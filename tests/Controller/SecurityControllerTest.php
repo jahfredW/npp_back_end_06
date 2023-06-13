@@ -60,7 +60,7 @@ class SecurityControllerTest extends WebTestCase
         
 
         // Ajouter le token dans l'en-tête d'autorisation de la requête
-        $this->client->request('GET', '/api/users', [], [], [
+        $this->client->request('GET', '/api/users/1', [], [], [
             'CONTENT_TYPE' => 'application/json',
             'HTTP_AUTHORIZATION' => 'Bearer ' . $token,
         ]);
@@ -84,7 +84,7 @@ class SecurityControllerTest extends WebTestCase
             
     
             // Ajouter le token dans l'en-tête d'autorisation de la requête
-            $this->client->request('GET', '/api/users', [], [], [
+            $this->client->request('GET', '/api/users/1', [], [], [
                 'CONTENT_TYPE' => 'application/json',
                 'HTTP_AUTHORIZATION' => 'Bearer ' . $token,
             ]);

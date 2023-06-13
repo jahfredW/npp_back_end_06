@@ -27,6 +27,9 @@ class Cart
     #[ORM\OneToMany(mappedBy: 'cart', targetEntity: CartLine::class)]
     private Collection $cartLines;
 
+    #[ORM\OneToOne(mappedBy: 'cart', cascade: ['persist', 'remove'])]
+    private ?Order $ordered = null;
+
     public function __construct()
     {
         $this->cartLines = new ArrayCollection();
@@ -100,6 +103,28 @@ class Cart
                 $cartLine->setCart(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getOrdered(): ?Order
+    {
+        return $this->ordered;
+    }
+
+    public function setOrdered(?Order $ordered): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($ordered === null && $this->ordered !== null) {
+            $this->ordered->setCart(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($ordered !== null && $ordered->getCart() !== $this) {
+            $ordered->setCart($this);
+        }
+
+        $this->ordered = $ordered;
 
         return $this;
     }

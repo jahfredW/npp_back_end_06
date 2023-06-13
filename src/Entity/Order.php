@@ -61,6 +61,9 @@ class Order
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Discount $discount = null;
 
+    #[ORM\OneToOne(inversedBy: 'ordered', cascade: ['persist', 'remove'])]
+    private ?Cart $cart = null;
+
     public function __construct()
     {
         $this->orderLines = new ArrayCollection();
@@ -210,6 +213,18 @@ class Order
     public function setDiscount(?Discount $discount): self
     {
         $this->discount = $discount;
+
+        return $this;
+    }
+
+    public function getCart(): ?Cart
+    {
+        return $this->cart;
+    }
+
+    public function setCart(?Cart $cart): self
+    {
+        $this->cart = $cart;
 
         return $this;
     }

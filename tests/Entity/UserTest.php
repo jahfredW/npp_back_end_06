@@ -91,7 +91,7 @@ class UserTest extends KernelTestCase
 
         $users = $this->entityManager->getRepository(User::class)->count([]);
 
-        $this->assertEquals(10, $users);
+        $this->assertEquals(30, $users);
     }
 
     public function testEmailUnique() : void 

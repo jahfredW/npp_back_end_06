@@ -80,7 +80,8 @@ class OrderController extends AbstractController
         // récupération du contenu du panier 
         $cart = $this->em->getRepository(Cart::class)->findOneByCookie($cartId);
     
-       
+        // association du panier à la commande
+        $order->setCart($cart);
 
         // recherche d'un utilisateur connecté 
         $user = $this->getUser();
@@ -117,7 +118,8 @@ class OrderController extends AbstractController
         // sommes des articles : 
         $sumOfArticles = $this->em->getRepository(CartLine::class)->findBySumOfArticles($cart);
            
-        // On met le currentDiscount à 0.
+        // On met le currentDiscount à 0
+       
         $currentDiscountBddRate = 0;
         $currentDiscountBddId = null;
 
@@ -129,7 +131,8 @@ class OrderController extends AbstractController
                 break;
             }
         }
-        // dd($currentDiscountBddRate);
+
+        
 
         // récupérer la liste des pictures 
         $picturesIdList = $this->em->getRepository(CartLine::class)->findPictureId($cart);
@@ -206,8 +209,11 @@ class OrderController extends AbstractController
        
         if($currentDiscountBddId != null){
           
-            $discountBdd  = $this->em->getRepository(Discount::class)->find($currentDiscountBddId);
-        }
+            $currentDiscountEntity = $this->em->getRepository(Discount::class)->find($currentDiscountBddId);
+            // association de la réduction actuelle à la commande
+            $order->setDiscount($currentDiscountEntity);
+            // dd($currentDiscountBddRate);
+            }
     
     
         // récupération de la réduction en bdd : 
