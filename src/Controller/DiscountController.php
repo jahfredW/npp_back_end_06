@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DiscountController extends AbstractController
@@ -22,7 +23,7 @@ class DiscountController extends AbstractController
         $this->em = $em;
     }
     
-    #[Route('/api/discounts/{id?}', name: 'app_discount')]
+    #[Route('/api/discounts/{id?}', name: 'app_discount', methods: ['GET'])]
     public function getDiscount(?int $id, ?Discount $discount): JsonResponse
     {
         if(isset($discount)){
@@ -37,7 +38,7 @@ class DiscountController extends AbstractController
         );
     }
 
-    #[Route('/api/discounts/order/{id}', name: 'app_discount_by_order')]
+    #[Route('/api/discounts/order/{id}', name: 'app_discount_by_order', methods: ['GET'])]
     public function getDiscountByOrderId(Request $request, $id): JsonResponse
     {
         $order = $this->em->getRepository(Order::class)->findDiscountByOrderId($id);
@@ -47,6 +48,23 @@ class DiscountController extends AbstractController
         $jsonDiscount = $this->serializer->serialize($discount, 'json', ['groups' => 'getDiscount']);
         return new JsonResponse(
                 $jsonDiscount, Response::HTTP_OK, [], true
+        );
+    }
+
+    #[Route('/api/discounts/{id}', name: 'delete_discount_by_id', methods: ['DELETE'])]
+    public function deleteDiscountById($id, Discount $discount): JsonResponse
+    {
+        if($discount){
+            try{
+                $this->em->remove($discount);
+                $this->em->flush();
+            } catch (\Exception $e){
+                throw new HttpException($e->getMessage());
+            }
+        } 
+
+        return new JsonResponse(
+                'Réduction supprimée', Response::HTTP_OK, [], true
         );
     }
 }
