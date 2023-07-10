@@ -10,6 +10,7 @@ use App\Entity\Address;
 use App\Entity\Invoice;
 use App\Entity\Picture;
 use App\Entity\Category;
+use App\Entity\Discount;
 use Doctrine\ORM\Events;
 use App\Entity\OrderLine;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
@@ -33,7 +34,8 @@ class DefaultValueSubscriber implements EventSubscriberInterface
         // if this subscriber only applies to certain entity types,
         // add some code to check the entity type as early as possible
         if (!$entity instanceof Picture && !$entity instanceof Album  && !$entity instanceof Category
-        && !$entity instanceof Order && !$entity instanceof Invoice && !$entity instanceof Address  ) {
+        && !$entity instanceof Order && !$entity instanceof Invoice && !$entity instanceof Address 
+        && !$entity instanceof Discount  ) {
             return;
         } 
 

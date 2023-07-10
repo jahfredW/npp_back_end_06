@@ -33,7 +33,7 @@ class AlbumController extends AbstractController
     private $cs;
     const BUCKET_NAME = 'npp_photos_prod';
     private $imgOptimizer;
-    const MAX_FILE_SIZE = 20000000;
+    const MAX_FILE_SIZE = 80000000;
 
 
     public function __construct(EntityManagerInterface $em, SerializerInterface $serializer, ImageOptimizer $imgOptimizer){
@@ -48,6 +48,8 @@ class AlbumController extends AbstractController
     // #[IsGranted('ROLE_USER', message: 'Vous n\'avez pas les droits suffisants')]
     public function getAllAlbums(Request $request): Response
     {
+        $beginDateObject = null;
+        $endDateObject = null;
         // récuépration du query param page - default 1
         $page = $request->query->getInt('page', 1);
         // récupération du query param limit défaut 10
@@ -65,12 +67,20 @@ class AlbumController extends AbstractController
         // dd($albumCategory);
        
         // récupération des date de début et dates de fin : 
-        $beginDate = $request->query->get('beginDate');
-        $endDate = $request->query->get('endDate');
+        // $beginDate = $request->query->get('beginDate');
+
+        // $endDate = $request->query->get('endDate');
 
         // utilisation de la méthode de classe dateDecoder pour convertir les dates 
-        $beginDateObject = Utils::dateDecoder($beginDate);
-        $endDateObject = Utils::dateDecoder($endDate);
+        if($beginDate !== null){
+            $beginDateObject = Utils::dateDecoder($beginDate);
+        }
+
+        if($endDate !== null){
+            $endDateObject = Utils::dateDecoder($endDate);
+        }
+        
+        
 
         if( $beginDateObject > $endDateObject && $endDateObject != null){
             throw new HttpException(404, 'La date de fin ne peut être supérieure');

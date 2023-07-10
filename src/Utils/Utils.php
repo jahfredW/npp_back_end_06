@@ -25,7 +25,11 @@ class Utils
     {
         $decodedDate = urldecode($date);
         $sliceDate = substr($decodedDate, 0 , (strpos( $decodedDate, 'G') - 1) );
-        return DateTimeImmutable::createFromFormat('D M d Y H:i:s', $sliceDate);
+        $dateTime = DateTimeImmutable::createFromFormat('D M d Y H:i:s', $sliceDate);
+
+        $dateTime = $dateTime->setTime(0,0,0);
+
+        return $dateTime;
     }
 }
 

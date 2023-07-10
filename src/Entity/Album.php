@@ -53,6 +53,7 @@ class Album
     private ?\DateTimeImmutable $expireAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'albums')]
+    #[Groups(['getAlbums', 'getAlbumInfo'])]
     private ?Products $product = null;
 
     public function __construct()

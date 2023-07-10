@@ -403,6 +403,7 @@ class OrderController extends AbstractController
     
 
     // renvoie de l'url vers le front-end. 
+    // $response = new JsonResponse($checkout_session->id);
     $response = new JsonResponse($checkout_session->id);
     $response->headers->clearcookie('cartId');
 

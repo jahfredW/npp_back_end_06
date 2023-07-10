@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Exception;
 use App\Entity\Order;
 use App\Entity\Discount;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,6 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DiscountController extends AbstractController
@@ -23,6 +25,7 @@ class DiscountController extends AbstractController
         $this->em = $em;
     }
     
+    // get a discount by id 
     #[Route('/api/discounts/{id?}', name: 'app_discount', methods: ['GET'])]
     public function getDiscount(?int $id, ?Discount $discount): JsonResponse
     {
@@ -38,6 +41,7 @@ class DiscountController extends AbstractController
         );
     }
 
+    // get a discount by order id 
     #[Route('/api/discounts/order/{id}', name: 'app_discount_by_order', methods: ['GET'])]
     public function getDiscountByOrderId(Request $request, $id): JsonResponse
     {
@@ -51,6 +55,7 @@ class DiscountController extends AbstractController
         );
     }
 
+    // delete a discount by id
     #[Route('/api/discounts/{id}', name: 'delete_discount_by_id', methods: ['DELETE'])]
     public function deleteDiscountById($id, Discount $discount): JsonResponse
     {
@@ -67,4 +72,69 @@ class DiscountController extends AbstractController
                 'Réduction supprimée', Response::HTTP_OK, [], true
         );
     }
+
+    // update a discount by id
+    #[Route('/api/discounts/{id}', name: 'update_discount_by_id', methods: ['PUT'])]
+    public function updateDiscountById($id, Discount $discount, Request $request): Response
+    {
+        if($discount){
+            $updatedDiscount = $this->serializer->deserialize($request->getContent(),
+            Discount::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $discount]);
+
+            $content = $request->toArray();
+            
+            if(isset($content['title']) && !empty($content['title'])){
+                $updatedDiscount->setTitle($content['title']);
+            } 
+            if(isset($content['rate']) && !empty($content['rate'])){
+                $updatedDiscount->setRate((floatval($content['rate'])));
+            }
+            if(isset($content['articles']) && !empty($content['articles'])){
+                $updatedDiscount->setArticles((int)$content['articles']);
+            }
+
+            try{
+                $this->em->flush();
+            } catch (Exception $e){
+                throw new HttpException(500, 'erreur');
+            }
+        } 
+
+        return new JsonResponse(
+                'updated', Response::HTTP_CREATED
+        );
+    }
+
+    // post a discount
+    #[Route('/api/discounts', name: 'post_discount', methods: ['POST'])]
+    public function postDiscount(Request $request): JsonResponse
+    {
+        $content = $request->toArray();
+
+        $newDiscount = new Discount;
+        // dd($newDiscount);
+            
+            if(isset($content['title']) && !empty($content['title'])){
+                $newDiscount->setTitle($content['title']);
+            } 
+            if(isset($content['rate']) && !empty($content['rate'])){
+                $newDiscount->setRate((floatval($content['rate'])));
+            }
+            if(isset($content['articles']) && !empty($content['articles'])){
+                $newDiscount->setArticles((int)$content['articles']);
+            }
+
+            try{
+               
+                $this->em->persist($newDiscount);
+                $this->em->flush();
+            } catch (Exception $e){
+                throw new HttpException(500, $e->getMessage());
+            }
+
+        return new JsonResponse(
+                'Réduction créée', Response::HTTP_OK, [], true
+        );
+    }
+
 }

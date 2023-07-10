@@ -29,7 +29,7 @@ class ProductController extends AbstractController
         $productJson = $this->serializer->serialize($product, 'json', ['groups' => 'getProduct']);
 
 
-        return new JsonResponse($productJson, Response::HTTP_OK);
+        return new JsonResponse($productJson, Response::HTTP_OK, [], true);
     }
 
 
