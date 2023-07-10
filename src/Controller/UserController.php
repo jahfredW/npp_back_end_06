@@ -50,6 +50,7 @@ class UserController extends AbstractController
 
             // récupération de la date de début 
             $beginDate = $request->query->get('beginDate');
+       
             $endDate = $request->query->get('endDate');
 
             // utilisation de la méthode de classe dateDecoder pour convertir les dates 

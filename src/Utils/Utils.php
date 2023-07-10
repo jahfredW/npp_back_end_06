@@ -27,7 +27,10 @@ class Utils
         $sliceDate = substr($decodedDate, 0 , (strpos( $decodedDate, 'G') - 1) );
         $dateTime = DateTimeImmutable::createFromFormat('D M d Y H:i:s', $sliceDate);
 
-        $dateTime = $dateTime->setTime(0,0,0);
+        if($dateTime != null){
+            $dateTime = $dateTime->setTime(0,0,0);
+        }
+        
 
         return $dateTime;
     }
