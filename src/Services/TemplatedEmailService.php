@@ -30,7 +30,7 @@ class TemplatedEmailService
         $this->email = new TemplatedEmail();
     }
 
-    public function send( string $from, string $to, string $subject, array $fileNameList) : void
+    public function send( string $from, string $to, string $subject, array $fileNameList, $discount) : void
     {
         // création du mail 
         $this->email
@@ -38,10 +38,12 @@ class TemplatedEmailService
         ->to($to)
         ->subject($subject)
         ->htmlTemplate($this->html)
+        // c'est ici qu'on passes les variables externes 
         ->context([
             'fileNameList' => $fileNameList,
             'total' => $this->total,
-            'orderLines' => $this->orderLines
+            'orderLines' => $this->orderLines,
+            'discount' => $discount
         ]);
 
         $this->mailer->send($this->email);

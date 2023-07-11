@@ -110,10 +110,23 @@ class DiscountController extends AbstractController
     public function postDiscount(Request $request): JsonResponse
     {
         $content = $request->toArray();
+        if($content)
+        {
+            $newDiscount = new Discount;
+            // dd($newDiscount);
 
-        $newDiscount = new Discount;
-        // dd($newDiscount);
-            
+            // récupération de la liste des promotions inscrites en base de donnée. 
+            $discountList = $this->em->getRepository(Discount::class)->findAll();
+         
+
+            foreach($discountList as $discount){
+                if($discount->getArticles() == (int)$content['articles'] )
+                {
+                    throw new HttpException(500, 'erreur');
+                    break;
+                }
+            }
+                
             if(isset($content['title']) && !empty($content['title'])){
                 $newDiscount->setTitle($content['title']);
             } 
@@ -125,16 +138,19 @@ class DiscountController extends AbstractController
             }
 
             try{
-               
+                
                 $this->em->persist($newDiscount);
                 $this->em->flush();
             } catch (Exception $e){
                 throw new HttpException(500, $e->getMessage());
             }
 
-        return new JsonResponse(
-                'Réduction créée', Response::HTTP_OK, [], true
-        );
+            return new JsonResponse(
+                    'Réduction créée', Response::HTTP_OK, [], true
+            );
+            }
+
+        
     }
 
 }

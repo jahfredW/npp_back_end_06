@@ -12,7 +12,7 @@ class Invoice
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['getInvoice'])]
+    #[Groups(['getInvoice', 'getOrders'])]
     private ?int $id = null;
 
     // #[ORM\OneToOne(inversedBy: 'invoice', cascade: ['persist', 'remove'])]

@@ -38,6 +38,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class StripeInit{
 
     private string $clientSecret;
+    private $currentDiscountEntity;
 
     public function __construct($clientSecret){
         $this->clientSecret = $clientSecret;
@@ -273,6 +274,8 @@ class StripeInit{
                         $invoice->setNumber($invoiceNumber);
                         $invoice->setTotal($totalTTC);
 
+                        $discount = $order->getDiscount();
+
 
                         try {
                             $em->persist($invoice);
@@ -286,7 +289,8 @@ class StripeInit{
                     } catch (Exception $e){
                         throw  new HttpException(500, $e->getMessage());
                     }
-
+                
+                
                 // initialisation du mail : 
 
                 $html = "<h2>Veuillez trouver ci-dessous les liens de téléchargement pour vos photos</h2>";
@@ -349,7 +353,7 @@ class StripeInit{
                 $mailerService = new TemplatedEmailService($mailer, $serializer);
                 $mailerService->setTotal($totalTTC);
                 $mailerService->setOrderLines($orderLines);
-                $mailerService->send('Nico@example.com', $userEmail, 'Merci :)', $fileNameList);
+                $mailerService->send('Nico@example.com', $userEmail, 'Merci :)', $fileNameList, $discount);
 
                     
                 }

@@ -54,15 +54,15 @@ class DiscountRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findDiscountByOrderId($value): ?Array
-//    {
-//        $qb = $this->createQueryBuilder('d');
-//        $qb->select('d.id')
-//        ->join('App\Entity\Order', 'o', 'WITH', 'o.discount = d')
-//         ->andWhere('o.id = :val')
-//         ->setParameter('val', $value);
-//         $query = $qb->getQuery();
-//         return $query->getResult()
-//        ;
-//    }
+   public function findDiscountByOrderId($value): ?Array
+   {
+       $qb = $this->createQueryBuilder('d');
+       $qb->select('d.id')
+       ->join('App\Entity\Order', 'o', 'WITH', 'o.discount = d')
+        ->andWhere('o.id = :val')
+        ->setParameter('val', $value);
+        $query = $qb->getQuery();
+        return $query->getResult()
+       ;
+   }
 }

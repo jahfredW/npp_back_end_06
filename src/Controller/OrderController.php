@@ -438,6 +438,32 @@ class OrderController extends AbstractController
 
     }
 
+    // get all orders or with user param
+    #[Route('/api/order/{orderId}', name: 'app_order_delete', methods : ['DELETE'])]
+    public function deleteOrder($id, Order $order): JsonResponse
+    {
+        
+
+        if($order)
+        {   
+            try{
+                $this->em->delete($order);
+            } catch (Exception $e) {
+                throw new HttpException(500, 'erreur');
+            }
+            
+            $this->em->flush();
+                
+        }
+
+        
+    
+
+        return new JsonResponse($jsonOrder, Response::HTTP_OK, [], true);
+
+    }
+
+
 
     #[Route('/api/order/{id}', name: 'app_order_get_id', methods : ['GET'])]
     public function getOrderById($id, Order $order, Request $request): JsonResponse

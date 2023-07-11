@@ -18,27 +18,42 @@
 <p>Pour télécharger vos photos cliquez sur les liens, puis cliquez droit et ' enregistrer l'image sous' </p>
 <br />
 {% for key,value in fileNameList %}
-<p><a href="{{ value }}" download,>{{ key }}</a></p>
+<p>-> <a href="{{ value }}" download,>{{ key }}</a></p>
 <br />
 {% endfor %}
 <br/>
-<p>Notez que vos liens sont disponibles une semaine</p>
+<p>Notez que vos liens sont disponibles une semaine !</p>
 <hr>
-<h1>Votre facture</h1>
+<h1>Votre reçu : </h1>
 <table>
   <tr>
-    <th>Produit</th>
-    <th>Quantité</th>
-    <th>Prix</th>
+    <th>Produit |</th>
+    <th>Quantité |</th>
+    <th>Prix |</th>
   </tr>
+  {% set total = 0 %}
     {% for i in 0..orderLines|length-1 %}
     <tr>
         <td>Photo</td>
         <td>{{ orderLines[i]['quantity'] }}</td>
-        <td>{{ orderLines[i]['price'] }}</td>
+        <td>{{ orderLines[i]['price'] }} euros</td>
+        {% set total = total + orderLines[i]['price']  %}
     </tr>
-{% endfor %}
+    {% endfor %}
 </table>
+<br/>
+<div>Total : {{ total }} euros </div>
+{% if discount %}
+<div>Réductions appliquée</div>
+<p>{{ discount.title }}, taux : {{ discount.rate}}, pour {{ discount.articles}} articles</p>
+{% else  %}
+<p>Aucune réduction appliquée</p>
+{% endif %}
+<hr>
+<h4>Nicolas Peltier Photographie vous remercie pour votre commande</h4>
+<hr>
+
+
 
 
 {# {% endapply %} #}

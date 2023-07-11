@@ -11,6 +11,7 @@ use App\Entity\Invoice;
 use App\Entity\Picture;
 use App\Entity\Category;
 use App\Entity\Discount;
+use App\Entity\Products;
 use Doctrine\ORM\Events;
 use App\Entity\OrderLine;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
@@ -35,7 +36,7 @@ class DefaultValueSubscriber implements EventSubscriberInterface
         // add some code to check the entity type as early as possible
         if (!$entity instanceof Picture && !$entity instanceof Album  && !$entity instanceof Category
         && !$entity instanceof Order && !$entity instanceof Invoice && !$entity instanceof Address 
-        && !$entity instanceof Discount  ) {
+        && !$entity instanceof Discount && !$entity instanceof Products   ) {
             return;
         } 
 
@@ -59,6 +60,9 @@ class DefaultValueSubscriber implements EventSubscriberInterface
             $entity->setExpireAt($date->add(new \DateInterval('P30D')));
         }
 
+        if( $entity instanceof Products){
+            $entity->setIsActive(true);
+        }
 
        
         $entity->setCreatedAt(new \DateTimeImmutable);

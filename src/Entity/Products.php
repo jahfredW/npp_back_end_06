@@ -36,12 +36,13 @@ class Products
     private ?bool $is_active = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['getProduct','getAlbums'])]
     private ?string $description = null;
 
-    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Picture::class)]
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Picture::class, orphanRemoval: true, cascade: ["persist", "remove"])]
     private Collection $pictures;
 
-    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Album::class)]
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Album::class, orphanRemoval: true, cascade: ["persist", "remove"])]
     private Collection $albums;
 
     public function __construct()
