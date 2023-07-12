@@ -353,7 +353,7 @@ class StripeInit{
                 $mailerService = new TemplatedEmailService($mailer, $serializer);
                 $mailerService->setTotal($totalTTC);
                 $mailerService->setOrderLines($orderLines);
-                $mailerService->send('Nico@example.com', $userEmail, 'Merci :)', $fileNameList, $discount);
+                $mailerService->send('fred@snaparadise.com', $userEmail, 'Merci :)', $fileNameList, $discount);
 
                     
                 }

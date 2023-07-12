@@ -51,11 +51,11 @@ class DefaultValueSubscriber implements EventSubscriberInterface
         }
 
         if ( $entity instanceof Picture){
-            $entity->setIsActive(false);
+            $entity->setIsActive(true);
         }
 
         if ( $entity instanceof Album){
-            $entity->setIsActive(false);
+            $entity->setIsActive(true);
             $date = new \DateTimeImmutable();
             $entity->setExpireAt($date->add(new \DateInterval('P30D')));
         }
