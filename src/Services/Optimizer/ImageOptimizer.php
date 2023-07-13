@@ -5,6 +5,7 @@ namespace App\Services\Optimizer;
 use Imagine\Image\Box;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Point;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class ImageOptimizer
 {
@@ -13,14 +14,16 @@ class ImageOptimizer
 
     private $imagine;
 
-    public function __construct()
+    public function __construct(KernelInterface $kernel)
     {
         $this->imagine = new Imagine();
+        $this->kernel = $kernel;
     }
 
     public function resize(string $filename, $originalName)
     {
-      
+        $publicDirectory = $this->kernel->getProjectDir() . '/public';
+       
         // Récupération des dimensions de l'image d'origine
         list($iwidth, $iheight) = getimagesize($filename);
         $ratio = $iwidth / $iheight;
@@ -41,7 +44,8 @@ class ImageOptimizer
         $photo->resize(new Box($width, $height));
 
         // Ouverture de l'image du filigrane
-        $watermark = $this->imagine->open('../public/filigrane/back.png');
+        // $watermark = $this->imagine->open($publicDirectory . '/filigrane/back.png');
+        $watermark = $this->imagine->open($publicDirectory . '/filigrane/back.png');
 
         // Calcul des dimensions de l'image du filigrane
         $wWidth = $width * 0.5; // mettre la largeur du watermark à la moitié de la largeur de l'image
@@ -57,7 +61,7 @@ class ImageOptimizer
         $photo->paste($watermark, $position, 50);
 
         // Sauvegarde de l'image redimensionnée avec filigrane
-        $photo->save("../public/images/" .$originalName. ".jpg");
+        $photo->save($publicDirectory . '/images/' .$originalName. ".jpg");
 
         // list($iwidth, $iheight) = getimagesize($filename);
         // $ratio = $iwidth / $iheight;

@@ -25,6 +25,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class AlbumController extends AbstractController
 {
@@ -36,11 +37,12 @@ class AlbumController extends AbstractController
     const MAX_FILE_SIZE = 80000000;
 
 
-    public function __construct(EntityManagerInterface $em, SerializerInterface $serializer, ImageOptimizer $imgOptimizer){
+    public function __construct(EntityManagerInterface $em, SerializerInterface $serializer, ImageOptimizer $imgOptimizer, KernelInterface $kernel ){
         $this->em = $em;
         $this->serializer = $serializer;
         $this->cs = GoogleCloudStorage::getInstance(AlbumController::BUCKET_NAME);
         $this->imgOptimizer = $imgOptimizer;
+        $this->kernel = $kernel;
         
     }
 
@@ -284,6 +286,7 @@ public function updateAlbum($id, Album $album, Request $request ) : Response
 // #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants')]
     public function upload(Request $request, $albumId)
     {
+        $publicDirectory = $this->kernel->getProjectDir() . '/public';
        
         // récupère les fichiers à uploader
         $files = $request->files->get('files');
@@ -387,7 +390,7 @@ public function updateAlbum($id, Album $album, Request $request ) : Response
                 $this->imgOptimizer->resize($file, $originalName);
 
                 // récupération des streams des images dans le dossier
-                $fileContent = file_get_contents("../public/images/" . $originalName . ".jpg");
+                $fileContent = file_get_contents($publicDirectory . '/images/' . $originalName . ".jpg");
                 
                 // upload des thmbnails vers le googleClood
                 $object = $bucket->upload($fileContent,
@@ -397,10 +400,15 @@ public function updateAlbum($id, Album $album, Request $request ) : Response
                 ]);
 
                 // Suppression des fichiers du dossier image
-                $path = "../public/images";
+                $path = $publicDirectory  . '/images';
+                // $path = $publicDirectory ;
 
                 $finder = new Finder();
                 $finder->in($path);
+                
+                // foreach ($finder as $file) {
+                //     unlink($file->getRealPath());
+                // }
 
                 $fileSystem = new Filesystem();
                 $fileSystem->remove($finder);

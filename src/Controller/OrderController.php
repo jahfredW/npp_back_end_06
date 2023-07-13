@@ -70,18 +70,28 @@ class OrderController extends AbstractController
         // vérification d'un utilisateur connecté 
 
 
+        // recherche d'un panier correspondant en base de donnée : 
+
 
         // ensuite il faut créer une nouvelle commande et asocier les lignes correspondantes
-        $order = new Order();
+        // $order = new Order();
         // $token = $request->get('token');
     
         // $data = $request->request->all();
 
         // récupération du contenu du panier 
         $cart = $this->em->getRepository(Cart::class)->findOneByCookie($cartId);
-    
-        // association du panier à la commande
-        $order->setCart($cart);
+
+        // recherche d'une commande ayant ce panier : 
+        $order = $this->em->getRepository(Order::class)->findOneByCart($cart);
+     
+        // si aucune commande n'a été trouvée, alors on en crée une 
+        if($order == null){
+            $order = new Order();
+            // association du panier à la commande
+            $order->setCart($cart);
+        }  
+        
 
         // recherche d'un utilisateur connecté 
         $user = $this->getUser();
