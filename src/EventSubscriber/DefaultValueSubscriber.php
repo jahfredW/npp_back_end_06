@@ -55,6 +55,7 @@ class DefaultValueSubscriber implements EventSubscriberInterface
 
         if ( $entity instanceof Picture){
             $entity->setIsActive(true);
+            $entity->setIsCover(false);
         }
 
         if ( $entity instanceof Album){

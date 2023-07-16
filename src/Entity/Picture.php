@@ -36,6 +36,9 @@ class Picture
     #[ORM\ManyToOne(inversedBy: 'pictures')]
     private ?Products $product = null;
 
+    #[ORM\Column]
+    private ?bool $isCover = null;
+
     // #[ORM\OneToMany(mappedBy: 'picture', targetEntity: OrderLine::class)]
     // private Collection $orderLines;
 
@@ -172,6 +175,18 @@ class Picture
     public function setProduct(?Products $product): self
     {
         $this->product = $product;
+
+        return $this;
+    }
+
+    public function isIsCover(): ?bool
+    {
+        return $this->isCover;
+    }
+
+    public function setIsCover(bool $isCover): static
+    {
+        $this->isCover = $isCover;
 
         return $this;
     }
