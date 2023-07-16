@@ -41,7 +41,7 @@ class PictureController extends AbstractController
         $pictureName = $picture->getName();
         $this->cs->setObjectName($pictureFileName);
         $url = $this->cs->getObject()
-                ->signedUrl(new DateTime('+30 minutes'), [
+                ->signedUrl(new DateTime('+24 hours'), [
                     'version' => 'v4',
                     'private' => true,
                 ]);

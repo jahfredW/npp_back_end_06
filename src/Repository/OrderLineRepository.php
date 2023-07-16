@@ -123,4 +123,16 @@ class OrderLineRepository extends ServiceEntityRepository
 
     return $resultSet->fetchAll();
    }
+
+   public function findOneByPictureAndOrder($picture_id, $orderId) : ?OrderLine
+   {
+        return $this->createQueryBuilder('o')
+        ->andWhere('o.ordered = :val')
+        ->andWhere('o.pictureId = :picture')
+        ->setParameter('val', $orderId)
+        ->setParameter('picture', $picture_id)
+        ->getQuery()
+        ->getOneOrNullResult();
+   }
+
 }

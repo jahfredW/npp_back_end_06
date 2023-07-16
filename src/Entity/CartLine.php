@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\CartLineRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CartLineRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CartLineRepository::class)]
 class CartLine
@@ -11,9 +12,11 @@ class CartLine
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['getCartLines'])]
     private ?int $id = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['getCartLines'])]
     private ?int $picture_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'cartLines')]
@@ -24,6 +27,7 @@ class CartLine
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['getCartLines'])]
     private ?int $quantity = null;
 
     public function getId(): ?int

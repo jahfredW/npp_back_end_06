@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use Exception;
 use App\Entity\Cart;
+use App\Entity\Order;
 use App\Entity\CartLine;
+use App\Entity\OrderLine;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +24,7 @@ class CartLineController extends AbstractController
 
     #[Route('api/cartline', name: 'app_cart_line', methods: ['DELETE'])]
     // suupression d'une ligne avec l'itemId
-    public function deleteAnCartLine(Request $request): JsonResponse
+    public function deleteAnCartLine(Request $request): Response
     {
 
         // récupération du queryParam itemId
@@ -30,22 +32,41 @@ class CartLineController extends AbstractController
         
         // récupération du cookie cartId
         $cartId = $request->cookies->get('cartId');
-
+        
         // récupération du panier
         $cart = $this->entityManager->getRepository(Cart::class)->findOneByCookie($cartId);
-
+        
         // récupération de la ligne de panier
         $cartLine = $this->entityManager->getRepository(CartLine::class)->findByPictureIdAndCart($pictureId, $cart);
+       
+        // récupération de l'order correspondant$
+        $order = $this->entityManager->getRepository(Order::class)->findOneByCart($cart);
 
-        if($cartLine){
+        // récupération de l'oderLine correspondant 
+        if($order != null){
+            $orderLine = $this->entityManager->getRepository(OrderLine::class)->findOneByPictureAndOrder($pictureId, $order->getId());
+
+            if($orderLine != null){
+
+                $this->entityManager->remove($orderLine);
+                $this->entityManager->flush();
+            }
+        }
+        
+        
+
+        if($cartLine != null){
 
             $this->entityManager->remove($cartLine);
+            $this->entityManager->flush();
+        }
 
-            try{
-                $this->entityManager->flush();
-            } catch (Exception $exception) {
-                throw $exception;
-            }
+        
+
+        try{
+            $this->entityManager->flush();
+        } catch (Exception $exception) {
+            throw $exception;
         }
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);

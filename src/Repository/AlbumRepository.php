@@ -73,9 +73,11 @@ class AlbumRepository extends ServiceEntityRepository
             ->setParameter('named', '%' . $albumName . '%');
         }
         
+        $results->orderBy('a.createdAt', 'DESC');
         $results = $results
         ->getQuery()
         ->getResult();
+
 
     return $results;
 }

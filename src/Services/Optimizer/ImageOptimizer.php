@@ -9,8 +9,9 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class ImageOptimizer
 {
-    private const MAX_WIDTH = 1200;
-    private const MAX_HEIGHT = 800;
+    private const MAX_WIDTH = 2400;
+    private const MAX_HEIGHT = 1600;
+    private $kernel;
 
     private $imagine;
 
@@ -48,7 +49,7 @@ class ImageOptimizer
         $watermark = $this->imagine->open($publicDirectory . '/filigrane/back.png');
 
         // Calcul des dimensions de l'image du filigrane
-        $wWidth = $width * 0.5; // mettre la largeur du watermark à la moitié de la largeur de l'image
+        $wWidth = $width * 0.2; // mettre la largeur du watermark à la moitié de la largeur de l'image
         $wHeight = $watermark->getSize()->getHeight() * ($wWidth / $watermark->getSize()->getWidth());
 
         // Redimensionnement de l'image du filigrane
@@ -58,7 +59,7 @@ class ImageOptimizer
         $position = new Point(($width - $wWidth) / 2, ($height - $wHeight) / 2);
 
         // Ajout du filigrane à l'image redimensionnée
-        $photo->paste($watermark, $position, 50);
+        $photo->paste($watermark, $position, 40);
 
         // Sauvegarde de l'image redimensionnée avec filigrane
         $photo->save($publicDirectory . '/images/' .$originalName. ".jpg");

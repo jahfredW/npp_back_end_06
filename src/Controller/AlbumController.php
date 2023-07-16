@@ -290,6 +290,7 @@ public function updateAlbum($id, Album $album, Request $request ) : Response
        
         // récupère les fichiers à uploader
         $files = $request->files->get('files');
+
         // récupère le nom de la session 
         $OriginalfileName = $files[0]->getClientOriginalName();
         
@@ -405,7 +406,7 @@ public function updateAlbum($id, Album $album, Request $request ) : Response
 
                 $finder = new Finder();
                 $finder->in($path);
-                
+                 
                 // foreach ($finder as $file) {
                 //     unlink($file->getRealPath());
                 // }

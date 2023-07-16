@@ -30,6 +30,12 @@ class Cart
     #[ORM\OneToOne(mappedBy: 'cart', cascade: ['persist', 'remove'])]
     private ?Order $ordered = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $status = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $CreatedAt = null;
+
     public function __construct()
     {
         $this->cartLines = new ArrayCollection();
@@ -125,6 +131,30 @@ class Cart
         }
 
         $this->ordered = $ordered;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->CreatedAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $CreatedAt): static
+    {
+        $this->CreatedAt = $CreatedAt;
 
         return $this;
     }

@@ -3,12 +3,14 @@
 // src/EventListener/DatabaseActivitySubscriber.php
 namespace App\EventSubscriber;
 
+use App\Entity\Cart;
 use App\Entity\User;
 use App\Entity\Album;
 use App\Entity\Order;
 use App\Entity\Address;
 use App\Entity\Invoice;
 use App\Entity\Picture;
+use App\Entity\CartLine;
 use App\Entity\Category;
 use App\Entity\Discount;
 use App\Entity\Products;
@@ -36,7 +38,8 @@ class DefaultValueSubscriber implements EventSubscriberInterface
         // add some code to check the entity type as early as possible
         if (!$entity instanceof Picture && !$entity instanceof Album  && !$entity instanceof Category
         && !$entity instanceof Order && !$entity instanceof Invoice && !$entity instanceof Address 
-        && !$entity instanceof Discount && !$entity instanceof Products   ) {
+        && !$entity instanceof Discount && !$entity instanceof Products && !$entity instanceof Cart 
+        && !$entity instanceof CartLine   ) {
             return;
         } 
 
@@ -64,6 +67,9 @@ class DefaultValueSubscriber implements EventSubscriberInterface
             $entity->setIsActive(true);
         }
 
+        if( $entity instanceof Cart){
+            $entity->setStatus('pending');
+        }
        
         $entity->setCreatedAt(new \DateTimeImmutable);
        

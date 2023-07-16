@@ -11,17 +11,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CartController extends AbstractController
 {
     private $entityManager;
+    private $serializer;
 
-    public function __construct(EntityManagerInterface $entityManager){
+    public function __construct(EntityManagerInterface $entityManager, SerializerInterface $serializer){
         $this->entityManager = $entityManager;
+        $this->serializer = $serializer;
     }
 
-    #[Route('/api/cart/{id?}', name: 'app_cart', methods: 'GET')]
+    #[Route('/api/cart/{id?}', name: 'app_cart', methods: 'POST')]
     public function postAnItem(Request $request, $id): JsonResponse
     {
         // $content = $request->get('idArticle');
@@ -47,7 +50,7 @@ class CartController extends AbstractController
             $cartId = uniqid(); // Générez l'identifiant du panier
 
             // Créez un objet Cookie avec l'identifiant du panier et une durée de validité de 7 jours
-            $cookie = new Cookie('cartId', $cartId, time() + (3600 * 24 * 7), '/', 'localhost',
+            $cookie = new Cookie('cartId', $cartId, time() + (3600 * 24), '/', 'localhost',
             true, false, false, 'None');
 
             if($cookie){
@@ -131,6 +134,13 @@ class CartController extends AbstractController
         // le panier est récupéré via l'id cartId du cookie
         $cart = $this->entityManager->getRepository(Cart::class)->findOneByCookie($cartId);
 
+        // // récupérer l'oder correspondant 
+        // $order = $this->entityManager->getRepository(Order::class)->findOneByCart($cart);
+
+        // récupérer l'orderline 
+
+
+
         // suupression du cookie en envoyanet une date passée 
         // $cookie = new Cookie('cartId', $cartId, time() - (3600 * 24 * 7), '/', 'localhost',
         //     true, false, false, 'None');
@@ -145,6 +155,28 @@ class CartController extends AbstractController
 
         $this->entityManager->flush();
 
-        return new JsonResponse(null, Response::HTTP_NO_CONTENT);;
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    }
+
+    #[Route('/api/cart', name: 'app_cart_get', methods: 'GET')]
+    public function getCartAnItem(Request $request): JsonResponse
+    {
+        // récupération de l'utilisateur connecté
+        // $user = $this->getUser();
+
+
+        $cookieId = $request->query->get('cartId');
+
+        // récupération du panier correspondant
+        $cart = $this->entityManager->getRepository(Cart::class)->findOneByCookie($cookieId);
+
+        // récupération des ligens de panier correspondantes : 
+
+        $cartLines = $cart->getCartLines();
+
+        $jsonCartLines = $this->serializer->serialize($cartLines, 'json', ['groups' => 'getCartLines']);
+    
+
+        return new JsonResponse($jsonCartLines, Response::HTTP_OK, [], true);
     }
 }

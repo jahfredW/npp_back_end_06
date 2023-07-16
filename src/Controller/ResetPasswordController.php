@@ -23,6 +23,7 @@ use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 class ResetPasswordController extends AbstractController
 {
     private $em;
+    const ADMIN_MAIL = "fred@snaparadise.com";
 
     public function __construct(EntityManagerInterface $em){
         $this->em = $em;
@@ -65,7 +66,7 @@ class ResetPasswordController extends AbstractController
             try {
                 $mailerService->buildHtml("<p>Réinitialisez votre mot de passe en cliquant ici : <a href=" . $url . ">ici</a></p>");
                 $mailerService->send(
-                    'admin@gmail.com',
+                    ResetPasswordController::ADMIN_MAIL,
                     $user->getEmail(),
                     'Lien de réinitialisation',
                     

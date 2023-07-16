@@ -96,8 +96,8 @@ class StripeInit{
             ]], $cartArray )
                 ],
             'mode' => 'payment',
-            'success_url' => "http://localhost:5173/success/" .  $orderId ,
-            'cancel_url' => "http://localhost:5173/failure",
+            'success_url' => "https://snaparadise.com/success/" .  $orderId ,
+            'cancel_url' => "https://snaparadise.com/failure",
             'discounts' => $discounts,
             'expires_at' => time() + (12 * 60 * 60 ),
             'metadata' => $metadata,

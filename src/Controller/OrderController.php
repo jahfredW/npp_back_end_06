@@ -335,19 +335,26 @@ class OrderController extends AbstractController
         $urlList = [];
     
         foreach($cartArray as $carts){
-            $orderLine = new OrderLine();
+            // ici il va falloir checker si il existe déja un orderLine pour un id de picture et un id de commande
+            // Il faut implémenter la méthode findOneByPictureAndOrder
+            $orderLine = $this->em->getRepository(OrderLine::class)->findOneByPictureAndOrder($carts['picture_id'], $order->getId());
+            if($orderLine == null){
+                $orderLine = new OrderLine();
             
-            $orderLine->setQuantity($carts['picture_quantity']);
-            $orderLine->setPrice($carts['picture_price']);
-            $orderLine->setTotal($carts['picture_quantity'] * $carts['picture_price'] ); 
-            $orderLine->setOrdered($order);
-            $orderLine->setPictureId($carts['picture_id']);
+                $orderLine->setQuantity($carts['picture_quantity']);
+                $orderLine->setPrice($carts['picture_price']);
+                $orderLine->setTotal($carts['picture_quantity'] * $carts['picture_price'] ); 
+                $orderLine->setOrdered($order);
+                $orderLine->setPictureId($carts['picture_id']);
+            }
+            
+
             $orderLineList[] = $orderLine;
         }
 
         
         
-        // recherche des urls : 
+        // recherche des urls des : 
         foreach($orderLineList as $orderLine){
             $picture = $this->em->getRepository(Picture::class)->find($orderLine->getPictureId());
             $pictureName = $picture->getFileName();
