@@ -94,6 +94,46 @@ class PictureController extends AbstractController
     throw new NotFoundHttpException('L\'entité demandée n\'existe pas.');
     
     }
+    // récupération des photos de carousel 
+    #[Route('/api/pictures', name: 'app_picture_carousel', methods: ['GET'])]
+    public function getPicturesCarousel(Request $request ): JsonResponse
+    {
+
+    $picturesCarouselContainer = [];
+
+    $isCarousel = $request->query->get('isCarousel');
+  
+
+    $pictures = $this->em
+        ->getRepository(Picture::class)->findByIsCarousel($isCarousel);
+
+    
+    if ($pictures != null) {
+        
+        foreach($pictures as $picture){
+            $pictureFileName = $picture->getFileName();
+            
+            $this->cs->setObjectName($pictureFileName);
+            $url = $this->cs->getObject()
+                    ->signedUrl(new DateTime('+24 hours'), [
+                        'version' => 'v4',
+                        'private' => true,
+                    ]);
+            
+            // $fileContents = file_get_contents($url);
+            // dd($fileContents);
+            $picturesCarouselContainer[] = $url;
+        }
+        
+    
+                
+
+    }
+    return new JsonResponse($picturesCarouselContainer);
+
+    
+    
+    }
 
 
     // Delete a picture : attention : delete cascade à desactiver ici ! 

@@ -37,7 +37,7 @@ class Picture
     private ?Products $product = null;
 
     #[ORM\Column]
-    private ?bool $isCover = null;
+    private ?bool $isCarousel = null;
 
     // #[ORM\OneToMany(mappedBy: 'picture', targetEntity: OrderLine::class)]
     // private Collection $orderLines;
@@ -179,14 +179,14 @@ class Picture
         return $this;
     }
 
-    public function isIsCover(): ?bool
+    public function isIsCarousel(): ?bool
     {
         return $this->isCover;
     }
 
-    public function setIsCover(bool $isCover): static
+    public function setIsCarousel(bool $isCarousel): static
     {
-        $this->isCover = $isCover;
+        $this->isCarousel = $isCarousel;
 
         return $this;
     }
