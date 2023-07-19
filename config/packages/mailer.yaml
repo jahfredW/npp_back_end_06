@@ -1,3 +1,4 @@
 framework:
     mailer:
         dsn: '%env(MAILER_DSN)%'
+        # dsn: 'mailjet+api://c5603f569b610f8709f5010192785c92:c593a728b6f857dfd322c36947eae973@default'

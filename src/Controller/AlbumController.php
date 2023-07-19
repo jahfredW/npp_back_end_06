@@ -35,6 +35,7 @@ class AlbumController extends AbstractController
     const BUCKET_NAME = 'npp_photos_prod';
     private $imgOptimizer;
     const MAX_FILE_SIZE = 80000000;
+    private $kernel;
 
 
     public function __construct(EntityManagerInterface $em, SerializerInterface $serializer, ImageOptimizer $imgOptimizer, KernelInterface $kernel ){

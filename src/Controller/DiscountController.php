@@ -131,7 +131,14 @@ class DiscountController extends AbstractController
                 $newDiscount->setTitle($content['title']);
             } 
             if(isset($content['rate']) && !empty($content['rate'])){
-                $newDiscount->setRate((floatval($content['rate'])));
+                if($content['rate'] >= 100){
+                    $content['rate'] == 99;
+
+                    return new JsonResponse('La réduction ne peut être supérieure à 100', Response::HTTP_NO_CONTENT);
+                } else {
+                    $newDiscount->setRate((floatval($content['rate'])));
+                }
+                
             }
             if(isset($content['articles']) && !empty($content['articles'])){
                 $newDiscount->setArticles((int)$content['articles']);

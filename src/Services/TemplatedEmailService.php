@@ -19,6 +19,8 @@ class TemplatedEmailService
     private $serializer;
     private $total;
     private $orderLines;
+    private $html;
+    private $email;
 
     public function __construct(MailerInterface $mailer, SerializerInterface $serializer){
         // non obligatoire dans php 8

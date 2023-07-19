@@ -171,12 +171,14 @@ class CartController extends AbstractController
         $cart = $this->entityManager->getRepository(Cart::class)->findOneByCookie($cookieId);
 
         // récupération des ligens de panier correspondantes : 
+        if($cart != null){
+            $cartLines = $cart->getCartLines();
+            $jsonCartLines = $this->serializer->serialize($cartLines, 'json', ['groups' => 'getCartLines']);
+            
+            return new JsonResponse($jsonCartLines, Response::HTTP_OK, [], true);
 
-        $cartLines = $cart->getCartLines();
-
-        $jsonCartLines = $this->serializer->serialize($cartLines, 'json', ['groups' => 'getCartLines']);
-    
-
-        return new JsonResponse($jsonCartLines, Response::HTTP_OK, [], true);
+        }
+        
+    return new JsonResponse(null, Response::HTTP_OK);
     }
 }
