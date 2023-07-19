@@ -168,9 +168,9 @@ class PictureController extends AbstractController
 
     }
 
-    // update One Picture
-#[Route("/api/picture/{id}", name: "picture_update", methods:['PUT'])]
-public function updatePicture($id, Picture $picture, Request $request ) : Response
+    // update One Picture isActive
+#[Route("/api/picture/{id}/isactive", name: "picture_update", methods:['PUT'])]
+public function updatePictureActive($id, Picture $picture, Request $request ) : Response
 {
    
     $content = $request->toArray();
@@ -183,7 +183,43 @@ public function updatePicture($id, Picture $picture, Request $request ) : Respon
     $this->em->flush();
   
 
-    return new Response('updated');
+    return new Response('updated active');
+}
+
+// update One Picture isCarousel 
+#[Route("/api/picture/{id}/iscarousel", name: "picture_update", methods:['PUT'])]
+public function updatePictureCarousel($id, Picture $picture, Request $request ) : JsonResponse
+{
+   
+    // récup sous forme d'array
+    $content = $request->toArray();
+
+    $published = $content['carousel'];
+
+    // récupérer l'état de la picture 
+    $pictureStateCarousel = $picture->isIsCarousel();
+   
+    // changement du status 
+    !$published ? $picture->setIsCarousel(false) : $picture->setIsCarousel(true); 
+
+    // vérification du nombre d'images de couverture 
+    $isFull = $this->em->getRepository(Picture::class)->findTotalIsCarousel(1);
+
+    if($isFull < 3 || ($pictureStateCarousel & $isFull == 3)  ){
+        $this->em->persist($picture);
+        $this->em->flush();
+
+        return new JsonResponse('updated carousel', Response::HTTP_NO_CONTENT) ;
+    } 
+
+    return new JsonResponse('nombre maximal de photos atteint', Response::HTTP_OK);
+
+
+    
+    
+  
+
+    
 }
 
     

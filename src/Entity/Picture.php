@@ -181,10 +181,10 @@ class Picture
 
     public function isIsCarousel(): ?bool
     {
-        return $this->isCover;
+        return $this->isCarousel;
     }
 
-    public function setIsCarousel(bool $isCarousel): static
+    public function setIsCarousel(bool $isCarousel): self
     {
         $this->isCarousel = $isCarousel;
 

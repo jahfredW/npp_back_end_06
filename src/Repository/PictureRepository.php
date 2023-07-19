@@ -92,5 +92,15 @@ public function findPictureByAlbum($albumId, $limit, $offset): ?Array
     return $results;
 }
 
+public function findTotalIsCarousel($value) : ?int
+{
+    return $this->createQueryBuilder('p')
+        ->select('SUM(p.isCarousel)')
+        ->andWhere('p.isCarousel = :val')
+        ->setParameter('val', $value)
+        ->getQuery()
+        ->getSingleScalarResult();
+}
+
 
 }

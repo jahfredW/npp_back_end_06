@@ -222,7 +222,8 @@ class AlbumController extends AbstractController
             'id' => $picture->getId(),
             'name' => $picture->getName(),
             'url' => $url,
-            'isActive' => $picture->isIsActive()
+            'isActive' => $picture->isIsActive(),
+            'isCarousel' => $picture->isIsCarousel()
         ];
     }
 
