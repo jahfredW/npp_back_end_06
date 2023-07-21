@@ -40,12 +40,19 @@ class AlbumRepository extends ServiceEntityRepository
     }
 
     public function findAlbumWithPagination($limit, $offset, $albumCategory, $albumType
-    , $beginDate, $endDate, $albumName): ?Array
+    , $beginDate, $endDate, $albumName, $id): ?Array
 {
     $results = $this->createQueryBuilder('a')
         ->setMaxResults($limit)
         ->setFirstResult($offset);
         
+        if( isset($id) && $id != null){
+            
+            $results->andWhere('a.id = :id')
+            ->setParameter('id', $id);
+        }
+
+
 
         if( isset($albumCategory) && $albumCategory != null){
             

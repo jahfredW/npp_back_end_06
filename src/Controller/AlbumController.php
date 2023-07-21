@@ -53,6 +53,9 @@ class AlbumController extends AbstractController
     {
         $beginDateObject = null;
         $endDateObject = null;
+        // récupération du query parap id 
+        $id = $request->query->getInt('id');
+
         // récuépration du query param page - default 1
         $page = $request->query->getInt('page', 1);
         // récupération du query param limit défaut 10
@@ -121,7 +124,7 @@ class AlbumController extends AbstractController
 
         $albumRepository = $this->em->getRepository(Album::class);
         $albumList = $albumRepository->findAlbumWithPagination($limit, $offset, $albumCategory, $albumType,
-        $beginDateObject, $endDateObject, $albumName);
+        $beginDateObject, $endDateObject, $albumName, $id);
 
 
 
@@ -457,7 +460,29 @@ public function updateAlbum($id, Album $album, Request $request ) : Response
 
             return new JsonResponse($jsonAlbum, Response::HTTP_OK, [], true);
 
-    }
+        }
+
+        // get mutiples albums by id 
+        #[Route('/api/albums', name: 'get_albums_checkbox', methods:['POST'])]
+        public function getAbumCheckBoxd(Request $request ): JsonResponse
+        {
+            $content = $request->toArray();
+
+            $albumTabToSend = [];
+
+            // if(isset($content['albumsId']) && !empty($content['albumsId'])){
+            //     $albumsIdList = $content['albumsId'];
+            //     foreach($albumsIdList as $albumId){
+            //         $album = $this->
+            //     }
+            // }
+
+            
+            $jsonAlbum = $this->serializer->serialize($album, 'json', ['groups' => 'getAlbumInfo']);
+
+            return new JsonResponse($jsonAlbum, Response::HTTP_OK, [], true);
+
+        }
 }
 
 
